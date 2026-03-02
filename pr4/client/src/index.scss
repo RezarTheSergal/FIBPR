@@ -1,0 +1,505 @@
+// ============================================
+// SCSS Variables
+// ============================================
+
+$primary-purple: #6600cc;
+$primary-blue: #0066ff;
+$accent-cyan: #00ffff;
+$accent-yellow: #ffff00;
+$accent-magenta: #ff00ff;
+$accent-light-purple: #b0b0ff;
+$accent-light-blue: #8080ff;
+
+$bg-dark: #0a0a1a;
+$bg-dark-blue: #1a1a3a;
+$bg-darker-purple: #2d0066;
+$bg-very-dark: #220044;
+
+$shadow-light: rgba(102, 0, 204, 0.5);
+$shadow-medium: rgba(102, 0, 204, 0.6);
+$shadow-bright: rgba(102, 0, 204, 0.8);
+$shadow-bright-blue: rgba(0, 102, 255, 0.5);
+$shadow-magenta: rgba(255, 0, 255, 0.6);
+$shadow-cyan: rgba(0, 255, 255, 0.2);
+$shadow-cyan-bright: rgba(0, 255, 255, 0.5);
+
+// ============================================
+// SCSS Mixins
+// ============================================
+
+@mixin glow($color1, $color2: null) {
+	@if $color2 {
+		box-shadow: 0 0 30px $color1, 0 0 60px $color2;
+	} @else {
+		box-shadow: 0 0 20px $color1;
+	}
+}
+
+@mixin glow-hover($color1, $color2: null) {
+	@if $color2 {
+		box-shadow: 0 0 40px $color1, 0 0 80px $color2;
+	} @else {
+		box-shadow: 0 0 25px $color1, 0 0 40px $color2;
+	}
+}
+
+@mixin gradient-bg($color1, $color2) {
+	background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
+
+@mixin text-shadow($color) {
+	text-shadow: 0 0 5px $color;
+}
+
+@mixin button-style($border-color, $text-color, $bg-color: transparent) {
+	padding: 0.7rem 1.4rem;
+	border: 2px solid $border-color;
+	background: $bg-color;
+	border-radius: 12px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 700;
+	transition: all 0.3s;
+	color: $text-color;
+	@include text-shadow($border-color);
+	font-family: Arial, sans-serif;
+}
+
+@mixin image-shadow($color1, $color2: null) {
+	@if $color2 {
+		filter: drop-shadow(0 0 30px $color1) drop-shadow(0 0 60px $color2);
+	} @else {
+		filter: drop-shadow(0 0 30px $color1);
+	}
+}
+
+// ============================================
+// Tailwind Directives
+// ============================================
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// ============================================
+// Global Styles
+// ============================================
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: $bg-dark;
+	color: #fff;
+}
+
+// ============================================
+// Header Styles
+// ============================================
+
+.header {
+	@include gradient-bg($primary-purple, $primary-blue);
+	color: $accent-yellow;
+	padding: 2rem;
+	@include glow($shadow-bright, $shadow-bright-blue);
+	border-bottom: 4px solid $accent-cyan;
+	text-align: center;
+	animation: headerGlow 3s ease-in-out infinite;
+
+	h1 {
+		font-size: 2.8rem;
+		font-weight: 900;
+		text-shadow: 0 0 10px $accent-cyan, 0 0 20px $primary-purple;
+		letter-spacing: 2px;
+		margin-bottom: 0.5rem;
+	}
+
+	p {
+		color: $accent-cyan;
+		margin-top: 0.3rem;
+		font-weight: 600;
+		font-size: 1rem;
+		@include text-shadow($primary-purple);
+	}
+}
+
+@keyframes headerGlow {
+	0%, 100% {
+		@include glow($shadow-bright, $shadow-bright-blue);
+	}
+	50% {
+		@include glow($shadow-bright, $shadow-bright-blue);
+	}
+}
+
+// ============================================
+// Container
+// ============================================
+
+.container {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+// ============================================
+// Filters Section
+// ============================================
+
+.filters {
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border-radius: 12px;
+	padding: 1.5rem;
+	margin-bottom: 2rem;
+	@include glow($shadow-light);
+	box-shadow: inset 0 0 10px $shadow-cyan;
+	border: 2px solid $primary-purple;
+
+	h3 {
+		margin-bottom: 1rem;
+		color: $accent-cyan;
+		@include text-shadow($primary-purple);
+		font-size: 1.2rem;
+	}
+}
+
+.category-buttons {
+	display: flex;
+	gap: 0.8rem;
+	flex-wrap: wrap;
+}
+
+.category-btn {
+	@include button-style($accent-cyan, $accent-cyan, $bg-dark-blue);
+
+	&:hover {
+		border-color: $accent-magenta;
+		color: $accent-magenta;
+		background: $bg-darker-purple;
+		box-shadow: 0 0 15px $accent-cyan inset;
+		transform: scale(1.05);
+	}
+
+	&.active {
+		@include gradient-bg($primary-purple, $primary-blue);
+		border-color: $accent-yellow;
+		color: $accent-yellow;
+		@include glow($primary-purple, $primary-blue);
+		text-shadow: 0 0 10px $accent-yellow;
+	}
+}
+
+// ============================================
+// Products Grid
+// ============================================
+
+.products-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1.5rem;
+}
+
+// ============================================
+// Product Card
+// ============================================
+
+.product-card {
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border-radius: 12px;
+	overflow: hidden;
+	@include glow($shadow-medium);
+	transition: all 0.3s;
+	display: flex;
+	flex-direction: column;
+	border: 2px solid $accent-cyan;
+
+	&:hover {
+		transform: translateY(-8px);
+		@include glow-hover($shadow-bright, $shadow-cyan-bright);
+		border-color: $accent-magenta;
+	}
+}
+
+.product-image-wrapper {
+	width: 100%;
+	height: 350px;
+	background: $bg-dark;
+	border-bottom: 2px solid $primary-purple;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	box-sizing: border-box;
+	flex-shrink: 0;
+}
+
+.product-image {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	margin: 0 auto;
+	transition: transform 0.3s ease;
+
+	.product-card:hover & {
+		transform: scale(1.1);
+	}
+}
+
+.product-info {
+	padding: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.product-category {
+	font-size: 0.75rem;
+	color: $accent-yellow;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin-bottom: 0.5rem;
+	background: $primary-purple;
+	padding: 0.4rem 0.8rem;
+	border-radius: 6px;
+	width: fit-content;
+	@include glow($shadow-light);
+	text-shadow: 0 0 3px $primary-purple;
+}
+
+.product-name {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: $accent-cyan;
+	margin-bottom: 0.6rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	line-clamp: 2;
+	overflow: hidden;
+	@include text-shadow($primary-purple);
+}
+
+.product-description {
+	font-size: 0.9rem;
+	color: $accent-light-purple;
+	line-height: 1.5;
+	margin-bottom: 1rem;
+	flex: 1;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	line-clamp: 3;
+	overflow: hidden;
+}
+
+.product-rating {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+	margin-bottom: 0.8rem;
+	font-size: 0.9rem;
+
+	.star {
+		color: $accent-yellow;
+	}
+
+	.score {
+		font-weight: 700;
+		color: $accent-yellow;
+	}
+
+	.count {
+		color: $accent-light-blue;
+		font-size: 0.8rem;
+	}
+}
+
+.product-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.8rem 0;
+	margin: 0.8rem 0;
+	border-top: 1px solid $primary-purple;
+	border-bottom: 1px solid $primary-purple;
+}
+
+.product-price {
+	font-size: 1.4rem;
+	font-weight: 900;
+	color: $accent-yellow;
+	text-shadow: 0 0 10px $primary-purple;
+}
+
+.product-stock {
+	font-size: 0.85rem;
+	color: $accent-cyan;
+	font-weight: 700;
+	background: rgba(0, 204, 255, 0.1);
+	padding: 0.4rem 0.8rem;
+	border-radius: 6px;
+	border: 1px solid $accent-cyan;
+
+	&.low {
+		color: $accent-magenta;
+		background: rgba(255, 0, 255, 0.1);
+		border-color: $accent-magenta;
+		text-shadow: 0 0 5px $accent-magenta;
+	}
+}
+
+// ============================================
+// Buy Button
+// ============================================
+
+.buy-btn {
+	@include gradient-bg($accent-magenta, $primary-purple);
+	color: $accent-yellow;
+	border: 2px solid $accent-cyan;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 700;
+	font-size: 0.95rem;
+	transition: all 0.3s;
+	@include glow($accent-magenta);
+	text-shadow: 0 0 5px $primary-purple;
+	font-family: Arial, sans-serif;
+	padding: 0.7rem 1.2rem;
+
+	&:hover:not(:disabled) {
+		transform: scale(1.08);
+		@include glow-hover($accent-magenta, $shadow-cyan-bright);
+		@include gradient-bg($primary-purple, $accent-magenta);
+		text-shadow: 0 0 10px $accent-yellow;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+// ============================================
+// Empty State
+// ============================================
+
+.empty-state {
+	text-align: center;
+	padding: 4rem 2rem;
+	color: $accent-light-blue;
+
+	h3 {
+		font-size: 1.5rem;
+		margin-bottom: 0.5rem;
+		color: $accent-magenta;
+	}
+}
+
+// ============================================
+// Loading State
+// ============================================
+
+.loading {
+	text-align: center;
+	padding: 4rem;
+	font-size: 1.2rem;
+	color: $accent-cyan;
+	@include text-shadow($primary-purple);
+}
+
+.loading-spinner {
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+	border: 4px solid $primary-purple;
+	border-top-color: $accent-yellow;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+	margin-bottom: 1rem;
+	@include glow($shadow-medium);
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+// ============================================
+// Error State
+// ============================================
+
+.error {
+	@include gradient-bg($primary-purple, $bg-very-dark);
+	color: $accent-yellow;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 2rem;
+	text-align: center;
+	border: 2px solid $accent-magenta;
+	@include glow($shadow-magenta);
+
+	button {
+		margin-top: 0.5rem;
+		padding: 0.5rem 1rem;
+		background: $accent-magenta;
+		color: $bg-dark;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		font-weight: 700;
+		@include glow($shadow-magenta);
+	}
+}
+
+// ============================================
+// Drunk Grandpa Overlay
+// ============================================
+
+.drunk-grandpa-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.9);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	backdrop-filter: blur(2px);
+}
+
+.drunk-grandpa-image {
+	max-width: 90%;
+	max-height: 90%;
+	width: auto;
+	height: auto;
+	animation: drunkSpin 0.5s ease-in-out infinite;
+	@include image-shadow($primary-purple, $accent-cyan);
+}
+
+@keyframes drunkSpin {
+	0%, 100% {
+		transform: rotate(-3deg) scale(1);
+	}
+	25% {
+		transform: rotate(3deg) scale(1.02);
+	}
+	50% {
+		transform: rotate(-5deg) scale(1.04);
+	}
+	75% {
+		transform: rotate(5deg) scale(1.02);
+	}
+}
