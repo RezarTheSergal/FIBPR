@@ -1,5 +1,7 @@
 const express = require('express')
 const cors = require('cors')
+const swaggerUi = require('swagger-ui-express')
+const specs = require('./swagger')
 const app = express()
 const port = 3001
 
@@ -7,6 +9,9 @@ const port = 3001
 app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }))
 
 // База данных товаров магазина "Пописярику TM" (в памяти)
 let products = [
@@ -187,11 +192,58 @@ app.get('/', (req, res) => {
 	})
 })
 
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Получить все товары
+ *     description: Возвращает список всех товаров в магазине
+ *     tags:
+ *       - Товары
+ *     responses:
+ *       200:
+ *         description: Успешно получен список товаров
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 // Получить все товары
 app.get('/api/products', (req, res) => {
 	res.json(products)
 })
 
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   get:
+ *     summary: Получить товар по ID
+ *     description: Возвращает информацию о конкретном товаре по его уникальному идентификатору
+ *     tags:
+ *       - Товары
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Уникальный идентификатор товара
+ *     responses:
+ *       200:
+ *         description: Товар успешно найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Товар не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // Получить товар по ID
 app.get('/api/products/:id', (req, res) => {
 	const product = products.find(p => p.id === Number(req.params.id))
@@ -201,12 +253,100 @@ app.get('/api/products/:id', (req, res) => {
 	res.json(product)
 })
 
+/**
+ * @swagger
+ * /api/products/category/{category}:
+ *   get:
+ *     summary: Получить товары по категории
+ *     description: Возвращает список товаров, отфильтрованных по категории
+ *     tags:
+ *       - Товары
+ *     parameters:
+ *       - in: path
+ *         name: category
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Название категории (Водка, Ликёры, Ром, Коньяк, и т.д.)
+ *     responses:
+ *       200:
+ *         description: Список товаров найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 // Получить товары по категории
 app.get('/api/products/category/:category', (req, res) => {
 	const filtered = products.filter(p => p.category === req.params.category)
 	res.json(filtered)
 })
 
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Добавить новый товар
+ *     description: Создает новый товар в базе данных магазина
+ *     tags:
+ *       - Товары
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - category
+ *               - price
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Новый напиток"
+ *                 description: Название товара
+ *               category:
+ *                 type: string
+ *                 example: "Водка"
+ *                 description: Категория товара
+ *               description:
+ *                 type: string
+ *                 example: "Описание напитка"
+ *                 description: Подробное описание
+ *               price:
+ *                 type: number
+ *                 format: float
+ *                 example: 999.99
+ *                 description: Цена в рублях
+ *               stock:
+ *                 type: number
+ *                 example: 50
+ *                 description: Количество на складе
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 example: 4.5
+ *                 description: Рейтинг товара
+ *               image:
+ *                 type: string
+ *                 example: "/images/product.jpg"
+ *                 description: Путь к изображению
+ *     responses:
+ *       201:
+ *         description: Товар успешно создан
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Отсутствуют обязательные поля (name, category, price)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // Добавить новый товар
 app.post('/api/products', (req, res) => {
 	const { name, category, description, price, stock, rating, image } = req.body
@@ -232,6 +372,72 @@ app.post('/api/products', (req, res) => {
 	res.status(201).json(newProduct)
 })
 
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   patch:
+ *     summary: Обновить товар
+ *     description: Обновляет информацию о товаре (полностью или частично). Можно обновить любое из полей товара
+ *     tags:
+ *       - Товары
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Уникальный идентификатор товара
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Обновленное название"
+ *                 description: Название товара
+ *               category:
+ *                 type: string
+ *                 example: "Водка"
+ *                 description: Категория товара
+ *               description:
+ *                 type: string
+ *                 example: "Новое описание"
+ *                 description: Подробное описание
+ *               price:
+ *                 type: number
+ *                 format: float
+ *                 example: 599.99
+ *                 description: Цена в рублях
+ *               stock:
+ *                 type: number
+ *                 example: 100
+ *                 description: Количество на складе
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 example: 4.8
+ *                 description: Рейтинг товара
+ *               image:
+ *                 type: string
+ *                 example: "/images/new-image.jpg"
+ *                 description: Путь к изображению
+ *     responses:
+ *       200:
+ *         description: Товар успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Товар не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // Обновить товар
 app.patch('/api/products/:id', (req, res) => {
 	const product = products.find(p => p.id === Number(req.params.id))
@@ -253,6 +459,35 @@ app.patch('/api/products/:id', (req, res) => {
 	res.json(product)
 })
 
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   delete:
+ *     summary: Удалить товар
+ *     description: Удаляет товар из базы данных магазина по его ID
+ *     tags:
+ *       - Товары
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Уникальный идентификатор товара для удаления
+ *     responses:
+ *       200:
+ *         description: Товар успешно удален
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Message'
+ *       404:
+ *         description: Товар не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // Удалить товар
 app.delete('/api/products/:id', (req, res) => {
 	const index = products.findIndex(p => p.id === Number(req.params.id))
