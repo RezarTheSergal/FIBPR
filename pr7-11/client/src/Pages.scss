@@ -1,22 +1,113 @@
+// ============================================
+// SCSS Variables (matching index.scss)
+// ============================================
+
+$primary-purple: #6600cc;
+$primary-blue: #0066ff;
+$accent-cyan: #00ffff;
+$accent-yellow: #ffff00;
+$accent-magenta: #ff00ff;
+$accent-light-purple: #b0b0ff;
+$accent-light-blue: #8080ff;
+
+$bg-dark: #0a0a1a;
+$bg-dark-blue: #1a1a3a;
+$bg-darker-purple: #2d0066;
+$bg-very-dark: #220044;
+
+$shadow-light: rgba(102, 0, 204, 0.5);
+$shadow-medium: rgba(102, 0, 204, 0.6);
+$shadow-bright: rgba(102, 0, 204, 0.8);
+$shadow-bright-blue: rgba(0, 102, 255, 0.5);
+$shadow-magenta: rgba(255, 0, 255, 0.6);
+$shadow-cyan: rgba(0, 255, 255, 0.2);
+$shadow-cyan-bright: rgba(0, 255, 255, 0.5);
+
+// ============================================
+// SCSS Mixins
+// ============================================
+
+@mixin glow($color1, $color2: null) {
+	@if $color2 {
+		box-shadow: 0 0 30px $color1, 0 0 60px $color2;
+	} @else {
+		box-shadow: 0 0 20px $color1;
+	}
+}
+
+@mixin gradient-bg($color1, $color2) {
+	background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
+
+@mixin text-shadow($color) {
+	text-shadow: 0 0 5px $color;
+}
+
+@mixin button-style($border-color, $text-color, $bg-color: transparent) {
+	padding: 0.7rem 1.4rem;
+	border: 2px solid $border-color;
+	background: $bg-color;
+	border-radius: 12px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 700;
+	transition: all 0.3s;
+	color: $text-color;
+	text-shadow: 0 0 5px $border-color;
+	font-family: Arial, sans-serif;
+}
+
+// ============================================
+// Global Reset
+// ============================================
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: $bg-dark;
+	color: #fff;
+}
+
+// ============================================
+// Page Base Styles
+// ============================================
+
 .page {
 	padding: 20px;
 	max-width: 1400px;
 	margin: 0 auto;
+	background: $bg-dark;
+	color: #fff;
+	min-height: 100vh;
 }
+
+// ============================================
+// Authentication Forms
+// ============================================
 
 .auth-form {
 	max-width: 400px;
 	margin: 50px auto;
 	padding: 30px;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	background: white;
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border: 2px solid $accent-cyan;
+	border-radius: 12px;
+	@include glow($shadow-light);
+	box-shadow: inset 0 0 10px $shadow-cyan;
 
 	h2 {
 		text-align: center;
 		margin-bottom: 30px;
-		color: #333;
+		color: $accent-yellow;
+		font-size: 1.8rem;
+		@include text-shadow($primary-purple);
 	}
 
 	form {
@@ -29,299 +120,175 @@
 .form-group {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
+	gap: 8px;
 
 	label {
-		font-weight: 500;
-		color: #333;
+		font-weight: 700;
+		color: $accent-cyan;
+		text-transform: uppercase;
+		font-size: 0.9rem;
+		letter-spacing: 1px;
+		@include text-shadow($primary-purple);
 	}
 
 	input,
 	select {
-		padding: 10px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
+		padding: 12px;
+		border: 2px solid $primary-purple;
+		border-radius: 8px;
 		font-size: 14px;
+		background: $bg-dark;
+		color: $accent-cyan;
+		font-weight: 600;
+		transition: all 0.3s;
+
+		&::placeholder {
+			color: $accent-light-purple;
+		}
 
 		&:focus {
 			outline: none;
-			border-color: #007bff;
-			box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+			border-color: $accent-cyan;
+			box-shadow: 0 0 20px $shadow-light;
+			@include text-shadow($primary-purple);
 		}
 	}
 }
 
 .error-message {
-	padding: 10px;
-	background-color: #f8d7da;
-	color: #721c24;
-	border: 1px solid #f5c6cb;
-	border-radius: 4px;
+	padding: 15px;
+	@include gradient-bg($accent-magenta, $primary-purple);
+	color: $accent-yellow;
+	border: 2px solid $accent-cyan;
+	border-radius: 8px;
 	margin-bottom: 15px;
+	@include glow($shadow-magenta);
+	text-align: center;
+	font-weight: 600;
 }
 
 .auth-link {
 	text-align: center;
 	margin-top: 20px;
-	color: #666;
 
 	a {
-		color: #007bff;
+		color: $accent-cyan;
 		cursor: pointer;
-		text-decoration: underline;
+		text-decoration: none;
+		font-weight: 700;
+		transition: all 0.3s;
+		@include text-shadow($primary-purple);
 
 		&:hover {
-			color: #0056b3;
+			color: $accent-yellow;
+			text-shadow: 0 0 10px $primary-purple;
 		}
 	}
 }
 
+// ============================================
+// Buttons
+// ============================================
+
 .btn-primary {
-	padding: 10px 20px;
-	background-color: #007bff;
-	color: white;
-	border: none;
-	border-radius: 4px;
+	@include gradient-bg($primary-purple, $accent-magenta);
+	color: $accent-yellow;
+	border: 2px solid $accent-cyan;
+	border-radius: 8px;
+	padding: 12px 24px;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 700;
 	cursor: pointer;
-	transition: background-color 0.3s;
+	@include glow($shadow-bright);
+	transition: all 0.3s;
+	text-shadow: 0 0 5px $primary-purple;
 
 	&:hover:not(:disabled) {
-		background-color: #0056b3;
+		transform: scale(1.05);
+		border-color: $accent-yellow;
+		box-shadow: 0 0 40px $shadow-bright, 0 0 80px $shadow-bright-blue;
 	}
 
 	&:disabled {
-		background-color: #cccccc;
+		opacity: 0.5;
 		cursor: not-allowed;
 	}
 }
 
 .btn-secondary {
-	padding: 8px 16px;
-	background-color: #6c757d;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	font-size: 14px;
-	cursor: pointer;
-	transition: background-color 0.3s;
+	@include button-style($accent-cyan, $accent-cyan, $bg-dark-blue);
 
 	&:hover {
-		background-color: #5a6268;
+		border-color: $accent-magenta;
+		color: $accent-magenta;
+		background: $bg-darker-purple;
+		box-shadow: 0 0 15px $accent-cyan inset;
+		transform: scale(1.05);
 	}
 }
 
 .btn-danger {
-	padding: 8px 16px;
-	background-color: #dc3545;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	font-size: 14px;
-	cursor: pointer;
-	transition: background-color 0.3s;
+	@include button-style($accent-magenta, $accent-yellow, $bg-darker-purple);
 
 	&:hover {
-		background-color: #c82333;
+		background: $accent-magenta;
+		color: $bg-dark;
+		@include glow($shadow-magenta);
+		transform: scale(1.05);
 	}
 }
 
 .btn-success {
-	padding: 8px 16px;
-	background-color: #28a745;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	font-size: 14px;
-	cursor: pointer;
-	transition: background-color 0.3s;
+	@include button-style($accent-cyan, $accent-yellow, $bg-darker-purple);
 
 	&:hover {
-		background-color: #218838;
+		background: $accent-cyan;
+		color: $bg-dark;
+		@include glow($shadow-cyan-bright);
+		transform: scale(1.05);
 	}
 }
 
-// Products List
-.products-list {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-	gap: 20px;
-	margin-top: 20px;
-}
-
-.product-card {
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	overflow: hidden;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	transition: transform 0.3s, box-shadow 0.3s;
-
-	&:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	img {
-		width: 100%;
-		height: 200px;
-		object-fit: cover;
-	}
-
-	.product-info {
-		padding: 15px;
-
-		h3 {
-			margin: 0 0 10px;
-			font-size: 18px;
-			color: #333;
-		}
-
-		p {
-			margin: 5px 0;
-			color: #666;
-			font-size: 14px;
-		}
-
-		.price {
-			font-size: 20px;
-			font-weight: bold;
-			color: #007bff;
-			margin: 10px 0;
-		}
-
-		.actions {
-			display: flex;
-			gap: 10px;
-			margin-top: 10px;
-
-			button {
-				flex: 1;
-				padding: 8px;
-				font-size: 12px;
-			}
-		}
-	}
-}
-
-// Users List
-.users-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
-	background: white;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-	thead {
-		background-color: #f8f9fa;
-		border-bottom: 2px solid #dee2e6;
-	}
-
-	th,
-	td {
-		padding: 12px;
-		text-align: left;
-		border-bottom: 1px solid #dee2e6;
-	}
-
-	th {
-		font-weight: 600;
-		color: #333;
-	}
-
-	tr:hover {
-		background-color: #f8f9fa;
-	}
-
-	.blocked {
-		color: #dc3545;
-		font-weight: 500;
-	}
-
-	.role-badge {
-		display: inline-block;
-		padding: 4px 8px;
-		border-radius: 4px;
-		font-size: 12px;
-		font-weight: 500;
-
-		&.user {
-			background-color: #d1ecf1;
-			color: #0c5460;
-		}
-
-		&.seller {
-			background-color: #d4edda;
-			color: #155724;
-		}
-
-		&.admin {
-			background-color: #f8d7da;
-			color: #721c24;
-		}
-	}
-}
-
-// Product Form
-.product-form {
-	max-width: 500px;
-	margin: 20px auto;
-	padding: 20px;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	background: white;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-	h3 {
-		margin-bottom: 20px;
-		color: #333;
-	}
-
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-	}
-
-	.form-actions {
-		display: flex;
-		gap: 10px;
-		justify-content: flex-end;
-
-		button {
-			padding: 10px 20px;
-		}
-	}
-}
+// ============================================
+// Header Navigation
+// ============================================
 
 .header {
-	background-color: #f8f9fa;
-	border-bottom: 1px solid #dee2e6;
+	background: linear-gradient(135deg, $primary-purple 0%, $primary-blue 100%);
+	border-bottom: 4px solid $accent-cyan;
 	padding: 15px 20px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	@include glow($shadow-bright, $shadow-bright-blue);
+	margin-bottom: 2rem;
+	border-radius: 8px;
+
+	h1 {
+		color: $accent-yellow;
+		text-shadow: 0 0 10px $accent-cyan;
+		font-size: 2rem;
+		margin: 0;
+	}
 
 	nav {
 		display: flex;
 		gap: 10px;
 
 		button {
-			padding: 8px 16px;
-			background-color: transparent;
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			cursor: pointer;
-			transition: all 0.3s;
+			@include button-style($accent-yellow, $accent-yellow, $bg-darker-purple);
 
 			&:hover {
-				background-color: #e9ecef;
+				background: $accent-yellow;
+				color: $bg-dark;
+				text-shadow: none;
 			}
 
 			&.active {
-				background-color: #007bff;
-				color: white;
-				border-color: #007bff;
+				@include gradient-bg($accent-cyan, $accent-magenta);
+				border-color: $accent-yellow;
+				color: $accent-yellow;
+				@include glow($shadow-cyan-bright);
 			}
 		}
 	}
@@ -332,156 +299,344 @@
 		gap: 15px;
 
 		span {
-			color: #666;
+			color: $accent-cyan;
+			font-weight: 700;
+			@include text-shadow($primary-purple);
 		}
 
 		button {
-			padding: 8px 16px;
-			background-color: #dc3545;
-			color: white;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-			transition: background-color 0.3s;
+			@include button-style($accent-magenta, $accent-yellow, $bg-darker-purple);
 
 			&:hover {
-				background-color: #c82333;
+				background: $accent-magenta;
+				color: $bg-dark;
+				@include glow($shadow-magenta);
 			}
 		}
 	}
 }
+
+// ============================================
+// Categories Filter
+// ============================================
 
 .categories-filter {
 	display: flex;
 	gap: 10px;
 	margin: 20px 0;
 	flex-wrap: wrap;
+	padding: 15px;
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border: 2px solid $primary-purple;
+	border-radius: 12px;
+	@include glow($shadow-light);
+	box-shadow: inset 0 0 10px $shadow-cyan;
 
 	button {
-		padding: 8px 16px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		background-color: white;
-		cursor: pointer;
-		transition: all 0.3s;
+		@include button-style($accent-cyan, $accent-cyan, $bg-dark-blue);
 
 		&:hover {
-			border-color: #007bff;
-			color: #007bff;
+			border-color: $accent-magenta;
+			color: $accent-magenta;
+			background: $bg-darker-purple;
+			box-shadow: 0 0 15px $accent-cyan inset;
+			transform: scale(1.05);
 		}
 
 		&.active {
-			background-color: #007bff;
-			color: white;
-			border-color: #007bff;
+			@include gradient-bg($primary-purple, $primary-blue);
+			border-color: $accent-yellow;
+			color: $accent-yellow;
+			@include glow($shadow-bright);
 		}
 	}
 }
 
-/* Enhanced styling for product form */
-.product-form {
-	background: #f9f9f9 !important;
-	padding: 20px !important;
-	border-radius: 8px !important;
-	margin-bottom: 30px !important;
-	border: 1px solid #ddd !important;
-	max-width: 100% !important;
-	margin: 0 0 30px 0 !important;
+// ============================================
+// Product Cards (Shopping)
+// ============================================
 
-	h3 {
-		margin-top: 0 !important;
-		margin-bottom: 20px !important;
-	}
-
-	form {
-		display: flex !important;
-		flex-direction: column !important;
-		gap: 15px !important;
-	}
-
-	textarea {
-		resize: vertical !important;
-		font-size: 14px !important;
-	}
-
-	.form-actions {
-		display: flex !important;
-		gap: 10px !important;
-		justify-content: flex-end !important;
-
-		button {
-			padding: 10px 20px !important;
-		}
-	}
+.products-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+	margin-top: 20px;
 }
 
-/* Enhanced product card styles */
 .product-card {
-	.actions {
-		display: flex;
-		gap: 10px;
-		margin-top: 15px;
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border: 2px solid $accent-cyan;
+	border-radius: 12px;
+	overflow: hidden;
+	@include glow($shadow-medium);
+	transition: all 0.3s;
 
-		button {
-			flex: 1;
-			padding: 8px 12px;
-			font-size: 12px;
+	&:hover {
+		transform: translateY(-8px);
+		border-color: $accent-magenta;
+		box-shadow: 0 0 40px $shadow-bright, 0 0 80px $shadow-cyan-bright;
+	}
+
+	img {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		border-bottom: 2px solid $primary-purple;
+	}
+
+	.product-info {
+		padding: 15px;
+
+		h3 {
+			margin: 0 0 10px;
+			font-size: 1.1rem;
+			color: $accent-cyan;
+			@include text-shadow($primary-purple);
+		}
+
+		p {
+			margin: 5px 0;
+			color: $accent-light-purple;
+			font-size: 0.9rem;
+			line-height: 1.5;
+		}
+
+		.price {
+			font-size: 1.4rem;
+			font-weight: bold;
+			color: $accent-yellow;
+			margin: 10px 0;
+			@include text-shadow($primary-purple);
+		}
+
+		.actions {
+			display: flex;
+			gap: 10px;
+			margin-top: 15px;
+
+			button {
+				flex: 1;
+				@include button-style($accent-magenta, $accent-yellow, transparent);
+				padding: 8px 12px;
+				font-size: 0.9rem;
+
+				&:hover {
+					background: $accent-magenta;
+					color: $bg-dark;
+				}
+			}
 		}
 	}
 }
 
-/* User management table enhanced */
+// ============================================
+// Admin - Users Table
+// ============================================
+
 .users-table {
-	border-radius: 8px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+	background: $bg-dark-blue;
+	border: 2px solid $accent-cyan;
+	border-radius: 12px;
 	overflow: hidden;
+	@include glow($shadow-light);
+
+	thead {
+		@include gradient-bg($primary-purple, $primary-blue);
+		border-bottom: 3px solid $accent-cyan;
+	}
+
+	th,
+	td {
+		padding: 15px;
+		text-align: left;
+		border-bottom: 1px solid $primary-purple;
+	}
+
+	th {
+		font-weight: 700;
+		color: $accent-yellow;
+		text-transform: uppercase;
+		font-size: 0.9rem;
+		letter-spacing: 1px;
+		@include text-shadow($accent-cyan);
+	}
+
+	td {
+		color: $accent-light-purple;
+		font-weight: 500;
+	}
+
+	tr:hover {
+		background: rgba(102, 0, 204, 0.3);
+	}
 
 	.role-badge {
+		display: inline-block;
+		padding: 6px 12px;
+		border-radius: 6px;
+		font-size: 0.85rem;
+		font-weight: 700;
+		border: 2px solid $accent-cyan;
+
 		&.role-user {
-			background: #e3f2fd;
-			color: #1976d2;
+			background: rgba(0, 255, 255, 0.2);
+			color: $accent-light-blue;
 		}
 
 		&.role-seller {
-			background: #fff3e0;
-			color: #f57c00;
+			background: rgba(255, 0, 255, 0.2);
+			color: $accent-magenta;
 		}
 
 		&.role-admin {
-			background: #fce4ec;
-			color: #c2185b;
+			background: rgba(255, 255, 0, 0.2);
+			color: $accent-yellow;
+			border-color: $accent-yellow;
 		}
 	}
 
 	.active-badge {
 		display: inline-block;
-		padding: 4px 8px;
-		border-radius: 4px;
-		background: #e8f5e9;
-		color: #388e3c;
-		font-size: 12px;
-		font-weight: 600;
+		padding: 6px 12px;
+		border-radius: 6px;
+		background: rgba(0, 255, 255, 0.2);
+		color: $accent-cyan;
+		font-size: 0.85rem;
+		font-weight: 700;
+		border: 2px solid $accent-cyan;
 	}
 
 	.blocked-badge {
 		display: inline-block;
-		padding: 4px 8px;
-		border-radius: 4px;
-		background: #ffebee;
-		color: #d32f2f;
-		font-size: 12px;
-		font-weight: 600;
+		padding: 6px 12px;
+		border-radius: 6px;
+		background: rgba(255, 0, 255, 0.2);
+		color: $accent-magenta;
+		font-size: 0.85rem;
+		font-weight: 700;
+		border: 2px solid $accent-magenta;
 	}
 
 	button {
-		padding: 6px 12px;
-		font-size: 12px;
+		padding: 8px 16px;
+		font-size: 0.85rem;
 		margin-right: 5px;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.3s;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 1px;
 	}
 
 	select {
-		padding: 6px 8px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		font-size: 14px;
+		padding: 8px 12px;
+		border: 2px solid $primary-purple;
+		border-radius: 6px;
+		font-size: 0.9rem;
+		background: $bg-darker-purple;
+		color: $accent-cyan;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s;
+
+		&:focus {
+			outline: none;
+			border-color: $accent-cyan;
+			box-shadow: 0 0 15px $shadow-light;
+		}
 	}
+}
+
+// ============================================
+// Product Form (Admin)
+// ============================================
+
+.product-form {
+	max-width: 100%;
+	margin: 0 0 30px 0;
+	padding: 20px;
+	@include gradient-bg($bg-dark-blue, $bg-darker-purple);
+	border: 2px solid $accent-cyan;
+	border-radius: 12px;
+	@include glow($shadow-light);
+	box-shadow: inset 0 0 10px $shadow-cyan;
+
+	h3 {
+		margin-top: 0;
+		margin-bottom: 20px;
+		color: $accent-yellow;
+		font-size: 1.4rem;
+		@include text-shadow($primary-purple);
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	textarea {
+		resize: vertical;
+		font-size: 14px;
+		padding: 12px;
+		border: 2px solid $primary-purple;
+		border-radius: 8px;
+		background: $bg-dark;
+		color: $accent-cyan;
+		font-weight: 600;
+		transition: all 0.3s;
+		font-family: Arial, sans-serif;
+
+		&::placeholder {
+			color: $accent-light-purple;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: $accent-cyan;
+			box-shadow: 0 0 20px $shadow-light;
+		}
+	}
+
+	.form-actions {
+		display: flex;
+		gap: 10px;
+		justify-content: flex-end;
+
+		button {
+			padding: 12px 24px;
+			font-size: 0.95rem;
+		}
+	}
+}
+
+// ============================================
+// Page Headings
+// ============================================
+
+.page h1 {
+	color: $accent-yellow;
+	text-shadow: 0 0 10px $accent-cyan;
+	font-size: 2.2rem;
+	margin-bottom: 1.5rem;
+	letter-spacing: 2px;
+}
+
+.page h2 {
+	color: $accent-cyan;
+	text-shadow: 0 0 5px $primary-purple;
+	font-size: 1.6rem;
+	margin-bottom: 1rem;
+}
+
+.page h3 {
+	color: $accent-light-blue;
+	text-shadow: 0 0 5px $primary-purple;
+	font-size: 1.2rem;
+	margin-bottom: 0.8rem;
 }
