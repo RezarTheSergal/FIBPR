@@ -1,0 +1,695 @@
+// =====================================================================
+// NEON DARK SASS - Beautiful Neon Interface
+// =====================================================================
+
+// === Neon Colors ===
+$neon-cyan: #00ffff;
+$neon-pink: #ff0099;
+$neon-green: #39ff14;
+$neon-purple: #9d00ff;
+$neon-orange: #ff6600;
+$neon-blue: #0099ff;
+
+$dark-bg: #0a0e27;
+$dark-card: #151a2e;
+$dark-border: #2a3a5e;
+$text-light: #e0e6ff;
+$text-muted: #8b92b4;
+
+$spacing-unit: 8px;
+$radius: 12px;
+
+// === Reset and Base ===
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background-color: $dark-bg;
+  color: $text-light;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+// === Typography ===
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  margin-bottom: $spacing-unit * 2;
+  letter-spacing: 1px;
+}
+
+h1 { 
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  color: $neon-cyan;
+  text-shadow: 0 0 10px $neon-cyan, 0 0 20px $neon-cyan;
+}
+
+h2 { 
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: $neon-pink;
+  text-shadow: 0 0 10px $neon-pink;
+}
+
+h3 { 
+  font-size: 1.5rem;
+  color: $neon-green;
+  text-shadow: 0 0 8px $neon-green;
+}
+
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: $spacing-unit;
+  color: $text-light;
+}
+
+a {
+  color: $neon-blue;
+  text-decoration: none;
+  transition: all 0.3s;
+  text-shadow: 0 0 5px $neon-blue;
+
+  &:hover {
+    text-shadow: 0 0 10px $neon-blue;
+  }
+}
+
+// === Layout ===
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+// === Header ===
+header {
+  background-color: $dark-card;
+  border-bottom: 2px solid $neon-cyan;
+  box-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+  padding: $spacing-unit * 3;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .header-subtitle {
+    font-size: 0.95rem;
+    color: $text-muted;
+    margin-top: $spacing-unit;
+  }
+}
+
+// === Navigation ===
+nav {
+  background-color: $dark-card;
+  border-bottom: 1px solid $dark-border;
+  position: sticky;
+  top: 80px;
+  z-index: 99;
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    flex-shrink: 0;
+    padding: $spacing-unit * 2;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: $text-muted;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    border-bottom: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &:hover {
+      color: $neon-orange;
+      text-shadow: 0 0 8px $neon-orange;
+    }
+
+    &.active {
+      color: $neon-green;
+      border-bottom-color: $neon-green;
+      text-shadow: 0 0 10px $neon-green;
+    }
+  }
+}
+
+// === Container ===
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-unit * 3;
+  width: 100%;
+}
+
+// === Grid ===
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-unit;
+  margin-bottom: $spacing-unit * 2;
+
+  &.is-center {
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.col {
+  flex: 1;
+  min-width: 0;
+
+  @for $i from 1 through 12 {
+    &.col-#{$i} {
+      flex-basis: calc(#{$i} / 12 * 100% - #{$spacing-unit});
+    }
+  }
+}
+
+// === Cards ===
+.card {
+  background-color: $dark-card;
+  border: 1px solid $dark-border;
+  border-radius: $radius;
+  padding: $spacing-unit * 2;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba($dark-bg, 0.5);
+
+  &:hover {
+    border-color: $neon-purple;
+    box-shadow: 0 0 15px rgba($neon-purple, 0.4), inset 0 0 15px rgba($neon-purple, 0.1);
+  }
+
+  &.primary {
+    border-left: 3px solid $neon-cyan;
+  }
+
+  &.success {
+    border-left: 3px solid $neon-green;
+  }
+
+  &.danger {
+    border-left: 3px solid $neon-pink;
+  }
+
+  &.warning {
+    border-left: 3px solid $neon-orange;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-unit;
+    padding-bottom: $spacing-unit;
+    border-bottom: 1px solid $dark-border;
+
+    h3 {
+      margin: 0;
+      flex: 1;
+    }
+  }
+
+  .card-body {
+    margin-bottom: $spacing-unit * 2;
+  }
+}
+
+// === Forms ===
+form {
+  margin-bottom: $spacing-unit * 3;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: $spacing-unit;
+  color: $text-light;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea,
+select {
+  width: 100%;
+  padding: $spacing-unit * 1.5 $spacing-unit * 2;
+  border: 1px solid $dark-border;
+  border-radius: $radius;
+  font-size: 0.95rem;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s;
+  background-color: $dark-bg;
+  color: $text-light;
+
+  &:focus {
+    outline: none;
+    border-color: $neon-cyan;
+    box-shadow: 0 0 10px rgba($neon-cyan, 0.5), inset 0 0 10px rgba($neon-cyan, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+// === Buttons ===
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-unit;
+  padding: $spacing-unit * 1.5 $spacing-unit * 3;
+  border: 1px solid;
+  border-radius: $radius;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.primary {
+    color: $neon-cyan;
+    border-color: $neon-cyan;
+    background-color: transparent;
+    text-shadow: 0 0 5px $neon-cyan;
+    box-shadow: 0 0 10px rgba($neon-cyan, 0.4);
+
+    &:hover {
+      box-shadow: 0 0 20px rgba($neon-cyan, 0.8), inset 0 0 10px rgba($neon-cyan, 0.2);
+    }
+  }
+
+  &.secondary {
+    color: $text-muted;
+    border-color: $dark-border;
+    background-color: $dark-bg;
+
+    &:hover {
+      color: $neon-orange;
+      border-color: $neon-orange;
+      text-shadow: 0 0 5px $neon-orange;
+    }
+  }
+
+  &.success {
+    color: $neon-green;
+    border-color: $neon-green;
+    background-color: transparent;
+    text-shadow: 0 0 5px $neon-green;
+    box-shadow: 0 0 10px rgba($neon-green, 0.4);
+
+    &:hover {
+      box-shadow: 0 0 20px rgba($neon-green, 0.8), inset 0 0 10px rgba($neon-green, 0.2);
+    }
+  }
+
+  &.danger {
+    color: $neon-pink;
+    border-color: $neon-pink;
+    background-color: transparent;
+    text-shadow: 0 0 5px $neon-pink;
+    box-shadow: 0 0 10px rgba($neon-pink, 0.4);
+
+    &:hover {
+      box-shadow: 0 0 20px rgba($neon-pink, 0.8), inset 0 0 10px rgba($neon-pink, 0.2);
+    }
+  }
+
+  &.warning {
+    color: $neon-orange;
+    border-color: $neon-orange;
+    background-color: transparent;
+    text-shadow: 0 0 5px $neon-orange;
+    box-shadow: 0 0 10px rgba($neon-orange, 0.4);
+
+    &:hover {
+      box-shadow: 0 0 20px rgba($neon-orange, 0.8), inset 0 0 10px rgba($neon-orange, 0.2);
+    }
+  }
+
+  &.small {
+    padding: $spacing-unit $spacing-unit * 2;
+    font-size: 0.8rem;
+  }
+
+  &.block {
+    width: 100%;
+  }
+}
+
+// === Utilities ===
+.is-center {
+  text-align: center;
+  justify-content: center;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.mt { margin-top: $spacing-unit * 2; }
+.mb { margin-bottom: $spacing-unit * 2; }
+.ml { margin-left: $spacing-unit * 2; }
+.mr { margin-right: $spacing-unit * 2; }
+
+.text-light {
+  color: $text-light;
+  font-size: 0.9rem;
+}
+
+.text-muted {
+  color: $text-muted;
+}
+
+.text-success {
+  color: $neon-green;
+}
+
+.text-danger {
+  color: $neon-pink;
+}
+
+.badge {
+  display: inline-block;
+  padding: $spacing-unit / 2 $spacing-unit;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid;
+
+  &.primary {
+    color: $neon-cyan;
+    border-color: $neon-cyan;
+  }
+
+  &.success {
+    color: $neon-green;
+    border-color: $neon-green;
+  }
+
+  &.danger {
+    color: $neon-pink;
+    border-color: $neon-pink;
+  }
+}
+
+// === Notifications ===
+.notification {
+  padding: $spacing-unit * 2;
+  border-radius: $radius;
+  margin-bottom: $spacing-unit * 2;
+  display: flex;
+  align-items: center;
+  gap: $spacing-unit * 2;
+  border: 1px solid;
+  animation: slideIn 0.3s ease-out;
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  .close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: all 0.3s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.success {
+    background-color: rgba($neon-green, 0.1);
+    border-color: $neon-green;
+    color: $neon-green;
+  }
+
+  &.error {
+    background-color: rgba($neon-pink, 0.1);
+    border-color: $neon-pink;
+    color: $neon-pink;
+  }
+
+  &.info {
+    background-color: rgba($neon-cyan, 0.1);
+    border-color: $neon-cyan;
+    color: $neon-cyan;
+  }
+}
+
+// === Lists ===
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .list-item {
+    padding: $spacing-unit * 1.5;
+    border-bottom: 1px solid $dark-border;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: rgba($neon-purple, 0.1);
+      border-left: 2px solid $neon-purple;
+    }
+
+    .list-content {
+      flex: 1;
+    }
+
+    .list-actions {
+      display: flex;
+      gap: $spacing-unit;
+    }
+  }
+}
+
+// === Status ===
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-unit * 1.5;
+  background-color: $dark-card;
+  border: 1px solid $dark-border;
+  border-radius: $radius;
+  margin-bottom: $spacing-unit * 2;
+  font-size: 0.9rem;
+  gap: $spacing-unit;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: $spacing-unit;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-indicator.online .status-dot {
+  background-color: $neon-green;
+  box-shadow: 0 0 10px $neon-green;
+}
+
+.status-indicator.offline .status-dot {
+  background-color: $neon-pink;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// === Pages ===
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// === Note Items ===
+.note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-unit * 1.5;
+  background-color: $dark-card;
+  border: 1px solid $dark-border;
+  border-radius: $radius;
+  margin-bottom: $spacing-unit;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: $neon-purple;
+    box-shadow: 0 0 15px rgba($neon-purple, 0.3);
+  }
+
+  .note-content {
+    flex: 1;
+  }
+
+  .note-text {
+    margin: 0;
+    color: $text-light;
+  }
+
+  .note-meta {
+    font-size: 0.85rem;
+    color: $text-muted;
+    margin-top: $spacing-unit;
+  }
+
+  .note-reminder {
+    color: $neon-pink;
+    font-weight: 600;
+  }
+
+  .note-actions {
+    display: flex;
+    gap: $spacing-unit;
+    margin-left: $spacing-unit * 2;
+  }
+}
+
+// === Footer ===
+footer {
+  background-color: $dark-card;
+  border-top: 1px solid $dark-border;
+  padding: $spacing-unit * 3;
+  margin-top: auto;
+  text-align: center;
+  color: $text-muted;
+  font-size: 0.9rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+// === Responsive ===
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-unit * 2;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  nav {
+    top: 60px;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

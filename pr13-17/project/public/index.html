@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Progressive Web App для управления заметками с офлайн-поддержкой, синхронизацией в реальном времени и push-уведомлениями">
+  <meta name="theme-color" content="#4285f4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Заметки">
+  
+  <title>PWA Заметки - Приложение для управления заметками</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>ЗАМЕТКИ</h1>
+      <p class="header-subtitle">Умное напоминалко. Красивое) Всем добра!</p>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <button class="nav-item active" data-page="home">
+        ГЛАВНАЯ
+      </button>
+      <button class="nav-item" data-page="reminders">
+        НАПОМИНАНИЯ
+      </button>
+      <button class="nav-item" data-page="about">
+        О ПРИЛОЖЕНИИ
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Notifications Container -->
+      <div id="notifications-container"></div>
+
+      <!-- Status Indicator -->
+      <div class="status-bar">
+        <span id="connection-status" class="status-indicator online">
+          <span class="status-dot"></span>
+          <span class="status-text">Онлайн</span>
+        </span>
+        <span id="sync-status" class="sync-indicator" style="display: none;">
+          Синхронизация...
+        </span>
+      </div>
+
+      <!-- Pages Container -->
+      <div id="pages-container">
+        <!-- Главная страница -->
+        <section id="home-page" class="page active">
+          <div class="row is-center">
+            <h2>Мои заметки</h2>
+          </div>
+
+          <!-- Форма добавления заметки -->
+          <div class="card mb">
+            <div class="card-header">
+              <h3>Добавить заметку</h3>
+            </div>
+            <div class="card-body">
+              <form id="note-form" class="row">
+                <input 
+                  class="col-9" 
+                  type="text" 
+                  id="note-input" 
+                  placeholder="Введите текст заметки" 
+                  required>
+                <button class="col-3 button primary" type="submit">
+                  ДОБАВИТЬ
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Список заметок -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Список (<span id="notes-count">0</span>)</h3>
+              <button class="button secondary small" id="clear-notes-btn">
+                Очистить
+              </button>
+            </div>
+            <div class="card-body">
+              <ul id="notes-list" class="list">
+                <li class="list-item text-muted is-center">
+                  <p>Нет заметок</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Напоминания -->
+        <section id="reminders-page" class="page">
+          <div class="row is-center">
+            <h2>Напоминания</h2>
+          </div>
+
+          <!-- Форма добавления напоминания -->
+          <div class="card mb">
+            <div class="card-header">
+              <h3>Добавить напоминание</h3>
+            </div>
+            <div class="card-body">
+              <form id="reminder-form" class="row">
+                <input 
+                  class="col-5" 
+                  type="text" 
+                  id="reminder-text" 
+                  placeholder="Текст" 
+                  required>
+                <input 
+                  class="col-4" 
+                  type="datetime-local" 
+                  id="reminder-time" 
+                  required>
+                <button class="col-3 button success" type="submit">
+                  ДОБАВИТЬ
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Список напоминаний -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Активные (<span id="reminders-count">0</span>)</h3>
+            </div>
+            <div class="card-body">
+              <ul id="reminders-list" class="list">
+                <li class="list-item text-muted is-center">
+                  <p>Напоминаний нет</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+
+        <!-- О приложении -->
+        <section id="about-page" class="page">
+          <div class="row is-center">
+            <h2>О приложении</h2>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>PWA Заметки v1.0.1.2</h3>
+            </div>
+            <div class="card-body">
+              <p><strong>Progressive Web App (PWA)</strong>Мощнейшее приложение для управления заметочками с неоновым интерфейсом ради дополнительной эстетики.</p>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>2025 PWA Заметки | Дисциплина: Фронтенд и бэкенд разработка | 4 семестр</p>
+  </footer>
+
+  <!-- Styles compiled from SASS -->
+  <style>
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Note and Reminder items */
+    .note-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background-color: rgba(84, 48, 128, 0.495);
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.3s;
+    }
+
+    .note-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .note-item.done {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .note-content {
+      flex: 1;
+    }
+
+    .note-text {
+      margin: 0;
+      font-size: 1rem;
+      color: #202124;
+    }
+
+    .note-reminder {
+      color: #ea4335;
+      font-weight: 500;
+    }
+
+    .note-actions {
+      display: flex;
+      gap: 8px;
+      margin-left: 16px;
+    }
+
+    /* Install button */
+    #install-btn {
+      display: none;
+    }
+
+    #install-btn.show {
+      display: inline-flex;
+    }
+  </style>
+
+  <!-- Scripts -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
