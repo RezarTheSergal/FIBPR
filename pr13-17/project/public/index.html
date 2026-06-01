@@ -12,8 +12,8 @@
   <title>PWA Заметки - Приложение для управления заметками</title>
   
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.svg">
   
   <!-- Web App Manifest -->
   <link rel="manifest" href="/manifest.json">
@@ -42,6 +42,9 @@
       </button>
       <button class="nav-item" data-page="reminders">
         НАПОМИНАНИЯ
+      </button>
+      <button class="nav-item" data-page="capabilities">
+        ВОЗМОЖНОСТИ
       </button>
       <button class="nav-item" data-page="about">
         О ПРИЛОЖЕНИИ
@@ -160,6 +163,67 @@
 
 
 
+        <!-- Возможности / Capabilities -->
+        <section id="capabilities-page" class="page">
+          <div class="row is-center">
+            <h2>Возможности</h2>
+          </div>
+
+          <!-- Installation section -->
+          <div class="card mb">
+            <div class="card-header">
+              <h3>Установка приложения</h3>
+            </div>
+            <div class="card-body">
+              <p>Установите приложение на свой девайс для быстрого доступа и автономной работы.</p>
+              <button class="button primary" id="install-btn">
+                Установить приложение
+              </button>
+              <p id="install-status" class="text-muted"><small>Ожидание поддержки браузером...</small></p>
+            </div>
+          </div>
+
+          <!-- Push Notifications section -->
+          <div class="card mb">
+            <div class="card-header">
+              <h3>Push-уведомления</h3>
+            </div>
+            <div class="card-body">
+              <p>Подпишитесь на push-уведомления для получения немедленных уведомлений при добавлении новых заметок.</p>
+              <button class="button primary" id="subscribe-push-btn">
+                Подписаться на уведомления
+              </button>
+              <p id="push-status" class="text-muted"><small>Загрузка...</small></p>
+            </div>
+          </div>
+
+          <!-- Browser Support section -->
+          <div class="card mb">
+            <div class="card-header">
+              <h3>Поддержка технологий</h3>
+            </div>
+            <div class="card-body">
+              <div class="support-grid">
+                <div class="support-item">
+                  <div class="support-label">Service Worker</div>
+                  <div id="browser-sw" class="badge">Проверка...</div>
+                </div>
+                <div class="support-item">
+                  <div class="support-label">Push API</div>
+                  <div id="browser-push" class="badge">Проверка...</div>
+                </div>
+                <div class="support-item">
+                  <div class="support-label">IndexedDB</div>
+                  <div id="browser-idb" class="badge">Проверка...</div>
+                </div>
+                <div class="support-item">
+                  <div class="support-label">Service Worker Status</div>
+                  <div id="sw-status" class="badge">Проверка...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         <!-- О приложении -->
         <section id="about-page" class="page">
           <div class="row is-center">
@@ -168,12 +232,13 @@
 
           <div class="card">
             <div class="card-header">
-              <h3>PWA Заметки v1.0.1.2</h3>
+              <h3>Информация</h3>
             </div>
             <div class="card-body">
-              <p><strong>Progressive Web App (PWA)</strong>Мощнейшее приложение для управления заметочками с неоновым интерфейсом ради дополнительной эстетики.</p>
-
-              </div>
+              <p><strong>Разработано:</strong> 2025</p>
+              <p><strong>Дисциплина:</strong> Фронтенд и бэкенд разработка</p>
+              <p><strong>Семестр:</strong> 4</p>
+              <p>@2025 PWA Заметки</p>
             </div>
           </div>
         </section>
@@ -276,6 +341,97 @@
 
     #install-btn.show {
       display: inline-flex;
+    }
+
+    /* Support Grid */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .support-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      background: rgba(66, 133, 244, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .support-label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #b2b3b5;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background-color: #f0f0f0;
+      color: #202124;
+    }
+
+    .badge.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .badge.danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    /* Code styling */
+    code {
+      background-color: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* List styling */
+    ol {
+      margin-left: 24px;
+      line-height: 1.8;
+    }
+
+    ol li {
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      margin-top: 16px;
+      margin-bottom: 12px;
+      color: #202124;
+      font-size: 1.1rem;
+    }
+
+    h4:first-child {
+      margin-top: 0;
     }
   </style>
 

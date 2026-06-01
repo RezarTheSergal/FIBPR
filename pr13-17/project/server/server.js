@@ -1,5 +1,5 @@
 const express = require('express');
-const http = require('http');
+const https = require('https');
 const socketIo = require('socket.io');
 const webpush = require('web-push');
 const bodyParser = require('body-parser');
@@ -20,7 +20,10 @@ webpush.setVapidDetails(
 );
 
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, '../public/cert/localhost+2-key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, '../public/cert/localhost+2.pem'))
+}, app);
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -31,6 +34,15 @@ const io = socketIo(server, {
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// Service Worker scope header
+app.use((req, res, next) => {
+  if (req.path === '/js/sw.js') {
+    res.setHeader('Service-Worker-Allowed', '/');
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Хранилище подписок
@@ -93,8 +105,8 @@ io.on('connection', (socket) => {
       const notificationTitle = 'Новая заметка';
       const notificationOptions = {
         body: `"${noteData.text}"`,
-        icon: '/icons/icon-192.png',
-        badge: '/icons/icon-192.png',
+        icon: '/icons/icon-192.svg',
+        badge: '/icons/icon-192.svg',
         tag: 'new-note',
         requireInteraction: false
       };
@@ -139,9 +151,7 @@ io.on('connection', (socket) => {
 // === Запуск сервера ===
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📡 WebSocket готов к подключениям`);
-  console.log(`⚠️  Измените VAPID ключи перед использованием в продакшене!`);
+  console.log(`🔒 Secure server running on https://localhost:${PORT}`);
 });
 
 // Graceful shutdown

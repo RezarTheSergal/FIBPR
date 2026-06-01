@@ -1,0 +1,57 @@
+version: "3.8"
+services:
+  backend1:
+    container_name: practice22_backend1
+    build: 
+      context: ./backend
+    environment:
+      - PORT=3091
+      - SERVER_NAME=Backend-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3091"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+      
+  backend2:
+    container_name: practice22_backend2
+    build: 
+      context: ./backend
+    environment:
+      - PORT=3092
+      - SERVER_NAME=Backend-2
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3092"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+      
+  nginx:
+    container_name: practice22_nginx
+    build:
+      context: ./nginx
+    ports:
+      - "3091:80"
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+    restart: on-failure
+    
+  haproxy:
+    container_name: practice22_haproxy
+    build:
+      context: ./haproxy
+    ports:
+      - "3093:80"
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+    restart: on-failure

@@ -26,9 +26,12 @@ const app = {
 };
 
 /**
- * Инициализация приложения при загрузке DOM
+ * Функция инициализации приложения
  */
-document.addEventListener('DOMContentLoaded', async () => {
+async function initApp() {
+  if (app.ready || window._appInitializing) return; // Предотвращаем двойную инициализацию
+  window._appInitializing = true;
+  
   console.log('Инициализация приложения...');
   
   try {
@@ -62,7 +65,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Ошибка инициализации:', error);
     showNotification('Ошибка инициализации приложения', 'error');
   }
-});
+}
+
+/**
+ * Запуск инициализации при загрузке DOM или сразу если DOM уже готов
+ */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  // DOM уже готов (скрипт загружается в конце)
+  initApp();
+}
 
 // ========================================================================
 // 1. SERVICE WORKER REGISTRATION (PR13)
@@ -131,36 +144,59 @@ function updateSWStatus(status) {
  * Инициализация функции установки приложения
  */
 function setupInstallPrompt() {
-  // Событие beforeinstallprompt срабатывает, когда браузер готов предложить установку
+  const installBtn = document.getElementById('install-btn');
+  
+  // Событие beforeinstallprompt срабатывает, когда браузер готов предложить установку  
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     app.installPrompt = e;
-
-    const installBtn = document.getElementById('install-btn');
-    if (installBtn) {
-      installBtn.classList.add('show');
-      installBtn.addEventListener('click', () => {
-        if (app.installPrompt) {
-          app.installPrompt.prompt();
-          app.installPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('Пользователь принял установку приложения');
-              showNotification('Приложение установлено!', 'success');
-            } else {
-              console.log('Пользователь отказался от установки');
-            }
-            app.installPrompt = null;
-          });
-        }
-      });
-    }
+    showInstallButton();
   });
 
   // Событие appinstalled срабатывает после успешной установки
   window.addEventListener('appinstalled', () => {
     console.log('PWA успешно установлено');
     app.installPrompt = null;
+    if (installBtn) {
+      installBtn.classList.remove('show');
+    }
   });
+  
+  // Функция для отображения кнопки установки
+  function showInstallButton() {
+    if (installBtn && app.installPrompt) {
+      installBtn.classList.add('show');
+      
+      // Убедимся что обработчик клика добавлен только один раз
+      if (!installBtn._installClickHandled) {
+        installBtn._installClickHandled = true;
+        installBtn.addEventListener('click', () => {
+          if (app.installPrompt) {
+            app.installPrompt.prompt();
+            app.installPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('Пользователь принял установку приложения');
+                showNotification('Приложение установлено!', 'success');
+              } else {
+                console.log('Пользователь отказался от установки');
+              }
+              app.installPrompt = null;
+            });
+          }
+        });
+      }
+    }
+  }
+  
+  // Проверяем поддержку PWA и пытаемся показать кнопку через 2 секунды
+  // (на случай если браузер генерирует событие с задержкой)
+  setTimeout(() => {
+    if (!app.installPrompt && installBtn) {
+      console.log('beforeinstallprompt не был сгенерирован браузером');
+      // Проверяем есть ли manifest и SW
+      fetch('/manifest.json').then(r => r.ok && console.log('✓ Manifest найден'));
+    }
+  }, 2000);
 }
 
 // ========================================================================
@@ -532,8 +568,8 @@ function triggerReminder(reminder) {
     navigator.serviceWorker.ready.then(registration => {
       registration.showNotification('Напоминание', {
         body: reminder.text,
-        icon: '/icons/icon-192.png',
-        badge: '/icons/icon-192.png',
+        icon: '/icons/icon-192.svg',
+        badge: '/icons/icon-192.svg',
         tag: `reminder-${reminder.id}`,
         requireInteraction: true,
         actions: [
@@ -615,7 +651,7 @@ function updateRemindersCount() {
  */
 function initWebSocket() {
   if (typeof io === 'undefined') {
-    console.warn('⚠️ Socket.io не загружена');
+    console.warn('Socket.io не загружена');
     return;
   }
 
@@ -640,26 +676,26 @@ function initWebSocket() {
 
   // Событие добавления заметки через WebSocket
   app.socket.on('taskAdded', (task) => {
-    console.log('📩 Новая заметка получена через WebSocket:', task);
+    console.log('Новая заметка получена через WebSocket:', task);
     // Обновляем UI, если заметка не добавлена нами
     renderNotes();
   });
 
   // Событие удаления заметки
   app.socket.on('taskRemoved', (data) => {
-    console.log('📤 Заметка удалена:', data.id);
+    console.log('Заметка удалена:', data.id);
     renderNotes();
   });
 
   // Событие отложения напоминания
   app.socket.on('reminderSnoozed', (data) => {
-    console.log('⏰ Напоминание отложено:', data);
+    console.log('Напоминание отложено:', data);
     renderReminders();
   });
 
   // Ошибки соединения
   app.socket.on('error', (error) => {
-    console.error('❌ Ошибка WebSocket:', error);
+    console.error('Ошибка WebSocket:', error);
   });
 }
 
@@ -692,12 +728,12 @@ function initPushNotifications() {
         if (subscription) {
           // Отписываемся
           await unsubscribeFromPush(subscription);
-          subscribePushBtn.textContent = '🔔 Подписаться на уведомления';
+          subscribePushBtn.textContent = 'Подписаться на уведомления';
           showNotification('Вы отписались от уведомлений', 'info');
         } else {
           // Подписываемся
           await subscribeForPush(registration);
-          subscribePushBtn.textContent = '🔕 Отписаться от уведомлений';
+          subscribePushBtn.textContent = 'Отписаться от уведомлений';
           showNotification('Вы подписались на уведомления', 'success');
         }
       } catch (error) {
@@ -710,7 +746,7 @@ function initPushNotifications() {
     navigator.serviceWorker.ready.then(async (registration) => {
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) {
-        subscribePushBtn.textContent = '🔕 Отписаться от уведомлений';
+        subscribePushBtn.textContent = 'Отписаться от уведомлений';
       }
     });
   }

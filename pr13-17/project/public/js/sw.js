@@ -10,9 +10,9 @@ const ASSETS_TO_CACHE = [
   '/css/main.css',
   '/js/app.js',
   '/manifest.json',
-  '/icons/favicon.ico',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/favicon.svg',
+  '/icons/icon-192.svg',
+  '/icons/icon-512.svg'
 ];
 
 // === Жизненный цикл Service Worker ===
@@ -146,8 +146,8 @@ self.addEventListener('push', event => {
     title: 'PWA Заметки',
     options: {
       body: 'Вам пришло уведомление',
-      icon: '/icons/icon-192.png',
-      badge: '/icons/icon-192.png',
+      icon: '/icons/icon-192.svg',
+      badge: '/icons/icon-192.svg',
       tag: 'notification',
       requireInteraction: false,
       actions: [

@@ -36,14 +36,6 @@ function AppContent() {
 						>
 							Товары
 						</button>
-						{(user.role === 'admin' || user.role === 'seller') && (
-							<button
-								className={currentPage === 'products' ? 'active' : ''}
-								onClick={() => setCurrentPage('products')}
-							>
-								Мои товары
-							</button>
-						)}
 						{user.role === 'admin' && (
 							<button
 								className={currentPage === 'admin' ? 'active' : ''}

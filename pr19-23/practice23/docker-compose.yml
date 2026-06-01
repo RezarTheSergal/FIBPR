@@ -1,0 +1,68 @@
+services:
+  nginx:
+    container_name: practice23_nginx
+    build:
+      context: ./nginx
+    ports:
+      - "3094:80"
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - pt23-network
+
+  backend1:
+    container_name: practice23_backend1
+    build: 
+      context: ./backend
+    environment:
+      - PORT=3095
+      - SERVER_NAME=backend-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3095"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - pt23-network
+
+  backend2:
+    container_name: practice23_backend2
+    build: 
+      context: ./backend
+    environment:
+      - PORT=3096
+      - SERVER_NAME=backend-2
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3096"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - pt23-network
+
+  haproxy:
+    container_name: practice23_haproxy
+    build:
+      context: ./haproxy
+    ports:
+      - "3097:80"
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - pt23-network
+
+networks:
+  pt23-network:
+    driver: bridge
